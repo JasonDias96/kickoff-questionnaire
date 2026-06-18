@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>KickOff Rating - Find Your Starting OVR</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #1a1a1a; min-height: 100vh; }
+.container { max-width: 440px; margin: 0 auto; padding: 16px; min-height: 100vh; }
+.logo { text-align: center; padding: 24px 0 8px; }
+.logo h1 { font-size: 22px; font-weight: 600; color: #1D9E75; }
+.logo p { font-size: 13px; color: #888; margin-top: 4px; }
+.card { background: #fff; border-radius: 16px; padding: 24px 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.step-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.sd { width: 8px; height: 8px; border-radius: 50%; background: #ddd; transition: background 0.2s; }
+.sd.active { background: #1D9E75; }
+.q-label { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+.q-sub { font-size: 13px; color: #888; margin-bottom: 18px; line-height: 1.5; }
+.name-input { width: 100%; padding: 14px 16px; border: 1.5px solid #e0e0e0; border-radius: 12px; font-size: 16px; outline: none; transition: border-color 0.2s; font-family: inherit; }
+.name-input:focus { border-color: #1D9E75; }
+.name-input::placeholder { color: #bbb; }
+.opt { border: 1.5px solid #e8e8e8; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+.opt:hover { border-color: #ccc; background: #fafafa; }
+.opt:active { transform: scale(0.98); }
+.opt.sel { border-color: #1D9E75; background: #f0faf6; }
+.opt-title { font-size: 15px; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 10px; }
+.opt-desc { font-size: 12px; color: #888; line-height: 1.5; padding-left: 28px; }
+.opt.sel .opt-title { color: #0a6e4a; }
+.opt.sel .opt-desc { color: #1D9E75; }
+.dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ccc; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.dot.on { border-color: #1D9E75; background: #1D9E75; }
+.dot.on::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #fff; }
+.btn { display: block; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; text-align: center; font-family: inherit; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: #1D9E75; color: #fff; margin-top: 16px; }
+.btn-primary:hover { background: #178a64; }
+.btn-primary:disabled { opacity: 0.4; cursor: default; transform: none; }
+.btn-back { background: transparent; color: #888; margin-top: 8px; font-size: 14px; }
+.btn-whatsapp { background: #25D366; color: #fff; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 16px; }
+.btn-whatsapp:hover { background: #20bd5a; }
+.btn-whatsapp svg { width: 22px; height: 22px; fill: #fff; }
+.hint { background: #FFF8EC; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
+.hint-icon { font-size: 18px; flex-shrink: 0; }
+.hint p { font-size: 12px; color: #8B6914; line-height: 1.5; }
+.once-notice { background: #f0faf6; border-radius: 10px; padding: 12px 14px; margin-bottom: 18px; }
+.once-notice p { font-size: 12px; color: #0a6e4a; line-height: 1.5; text-align: center; }
+.result-card { text-align: center; padding: 32px 20px; }
+.result-name { font-size: 14px; color: #888; margin-bottom: 4px; }
+.result-ovr { font-size: 72px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+.result-tier { font-size: 15px; color: #1D9E75; font-weight: 600; margin-top: 4px; }
+.result-details { margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; text-align: left; }
+.result-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; }
+.result-row .label { color: #888; }
+.result-row .value { font-weight: 600; text-align: right; max-width: 60%; }
+.result-note { font-size: 12px; color: #888; text-align: center; margin-top: 16px; line-height: 1.6; }
+.done-msg { text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; }
+.done-msg p { font-size: 13px; color: #1D9E75; font-weight: 500; }
+.done-msg .sub { font-size: 12px; color: #888; font-weight: 400; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="logo">
+<h1>KickOff</h1>
+<p>Find your starting rating — takes 30 seconds</p>
+</div>
+<div class="card" id="app"></div>
+</div>
+
+<script>
+const q1opts = [
+  {id:"new",title:"I'm new to football",desc:"You're just getting started or you've only played a handful of times. Everyone starts somewhere — this is your somewhere."},
+  {id:"casual",title:"I play casually with mates",desc:"Park kickabouts, the odd 5-a-side with friends. No league, no drama — just a good time."},
+  {id:"cleague",title:"I play in a casual league",desc:"Work league, social 5/6/7-a-side, or a regular weekly game. You've probably got a team group chat that's 90% banter."},
+  {id:"comp",title:"I play in a competitive league",desc:"Sunday league, competitive 11-a-side, or a proper league where the table actually matters to people."},
+  {id:"semipro",title:"Semi-pro or above",desc:"You've played at a level most people only watch. Academy, semi-pro, professional — the real deal."}
+];
+
+const branches = {
+  "new":{label:"How would you describe your ability right now?",sub:"No wrong answers here — this just helps us find your starting point",opts:[
+    {title:"Completely brand new",desc:"You're still getting used to how the ball moves. Passing and shooting feel unpredictable, and that's totally fine — you'll improve fast.",seed:950},
+    {title:"Getting the hang of it",desc:"You can kick the ball and it goes roughly the right direction. Your touch isn't consistent yet but you're getting there.",seed:1025},
+    {title:"Athletic, just new to football",desc:"You're fit and active from other sports — football is just the latest addition. You tend to pick things up quickly.",seed:1100}
+  ]},
+  "casual":{label:"When you play with your mates, where do you fit in?",sub:"Think about a typical game — we all have good days and bad days",opts:[
+    {title:"I'm still finding my feet",desc:"You love playing but fitness or confidence can be a challenge. You're there for the fun and that's what matters.",seed:1075},
+    {title:"I hold my own",desc:"You can last most of the game, your passing is decent, and you feel comfortable on the pitch. A reliable pick.",seed:1150},
+    {title:"I'm usually one of the better ones",desc:"You get picked early, you can control the game a bit, and you chip in with goals or assists fairly regularly.",seed:1225}
+  ]},
+  "cleague":{label:"How do you compare to others in your league?",sub:"Think about a normal week — not your best performance, not your worst",opts:[
+    {title:"I'm still developing at this level",desc:"The pace can feel a bit fast sometimes and you're still growing into the standard. Every game you're learning though.",seed:1175},
+    {title:"I'm a solid mid-table player",desc:"You do your job well, you're reliable, and you can comfortably play the full game without any issues.",seed:1250},
+    {title:"I'm one of the best in my league",desc:"You're a key player for your team. People notice when you play well — and when you're not there.",seed:1325}
+  ]},
+  "comp":{label:"What level of competitive football?",sub:"Where you're playing regularly right now",opts:[
+    {title:"Standard Sunday league",desc:"Regular 11-a-side weekend league with a proper ref, proper goals, and a league table. Good standard, proper football.",seed:1350},
+    {title:"High-level amateur",desc:"Top-tier Sunday league, county cups, FA Vase qualifying rounds. A clear step up from your average local league.",seed:1450}
+  ]},
+  "semipro":{label:"What level have you played at?",sub:"The highest level you competed at regularly — not a one-off trial or friendly",warn:true,opts:[
+    {title:"County or regional level",desc:"County cups, regional leagues, strong university 1st team, or serious representative football. A level above club football.",seed:1450},
+    {title:"Academy or semi-pro",desc:"Professional club academy, National League System (step 5-7), or you were paid to play part-time. Proper pedigree.",seed:1650},
+    {title:"Professional",desc:"Full-time professional contract — EFL, Scottish Premiership, or equivalent abroad. You had a squad number and a locker.",seed:1900},
+    {title:"Top-flight or international",desc:"Premier League, Championship, top European leagues, or senior international caps. You already know where you belong.",seed:2150}
+  ]}
+};
+
+const q2opts = [
+  {title:"Rarely",desc:"A few times a year at most. Your boots might need dusting off but that's alright — they'll warm up.",adj:-50},
+  {title:"Once or twice a month",desc:"You play when life allows it. Not every week, but enough to keep the rust off.",adj:0},
+  {title:"About once a week",desc:"You've got a regular weekly game or session. Football is a proper part of your week.",adj:25},
+  {title:"Multiple times a week",desc:"Training, matches, or kickabouts 2+ times a week. Football is a big part of your routine and you love it.",adj:50}
+];
+
+let step="name",playerName="",q1sel=-1,brSel=-1,q2sel=-1,submitted=false;
+
+function toOVR(v){return Math.max(60,Math.min(99,Math.round(60+(v-800)*39.0/1400.0)))}
+function getSeed(){
+  if(q1sel<0||brSel<0)return 1175;
+  return branches[q1opts[q1sel].id].opts[brSel].seed;
+}
+
+function dots(a,t){
+  let h='<div class="step-dots">';
+  for(let i=0;i<t;i++)h+='<div class="sd'+(i<a?' active':'')+'"></div>';
+  return h+'</div>';
+}
+
+function optHTML(opts,si,fn){
+  let h='';
+  opts.forEach((o,i)=>{
+    const s=i===si;
+    h+='<div class="opt'+(s?' sel':'')+'" onclick="'+fn+'('+i+')">';
+    h+='<p class="opt-title"><span class="dot'+(s?' on':'')+'"></span>'+o.title+'</p>';
+    h+='<p class="opt-desc">'+o.desc+'</p></div>';
+  });
+  return h;
+}
+
+function render(){
+  const app=document.getElementById("app");
+  let h='';
+
+  if(submitted){
+    h+='<div style="text-align:center;padding:40px 20px;">';
+    h+='<div style="font-size:48px;margin-bottom:12px;">&#9989;</div>';
+    h+='<p style="font-size:17px;font-weight:600;color:#1D9E75;">Already submitted</p>';
+    h+='<p style="font-size:13px;color:#888;margin-top:8px;line-height:1.6;">You\'ve already sent your rating to Tara. Your starting OVR will be applied before the next match. See you on the pitch!</p>';
+    h+='</div>';
+    app.innerHTML=h;
+    return;
+  }
+
+  if(step==="name"){
+    h+=dots(1,5);
+    h+='<p class="q-label">What\'s your name?</p>';
+    h+='<p class="q-sub">So we know whose rating this is</p>';
+    h+='<div class="once-notice"><p>You can only do this once — go with your gut. Your real matches will adjust your rating quickly anyway.</p></div>';
+    h+='<input class="name-input" type="text" placeholder="Your name" id="nameInput" value="'+playerName+'" oninput="playerName=this.value" autocomplete="off" autocapitalize="words">';
+    h+='<button class="btn btn-primary" onclick="goToQ1()" id="nameBtn">Let\'s go</button>';
+  }
+  else if(step==="q1"){
+    h+=dots(2,5);
+    h+='<p class="q-label">What best describes your football experience?</p>';
+    h+='<p class="q-sub">Pick the one that fits you right now — not where you used to be</p>';
+    h+=optHTML(q1opts,q1sel,"pickQ1");
+    h+='<button class="btn btn-primary"'+(q1sel<0?' disabled':'')+' onclick="goToBranch()">Next</button>';
+    h+='<button class="btn btn-back" onclick="goBack(\'name\')">Back</button>';
+  }
+  else if(step==="branch"){
+    h+=dots(3,5);
+    const br=branches[q1opts[q1sel].id];
+    h+='<p class="q-label">'+br.label+'</p>';
+    h+='<p class="q-sub">'+br.sub+'</p>';
+    if(br.warn){
+      h+='<div class="hint"><span class="hint-icon">&#9432;</span><p>Just a heads up — your rating updates after every match based on how you actually play. There\'s no benefit to picking a level higher than where you really are. Be honest and the system will do the rest.</p></div>';
+    }
+    h+=optHTML(br.opts,brSel,"pickBr");
+    h+='<button class="btn btn-primary"'+(brSel<0?' disabled':'')+' onclick="goToQ2()">Next</button>';
+    h+='<button class="btn btn-back" onclick="goBack(\'q1\')">Back</button>';
+  }
+  else if(step==="q2"){
+    h+=dots(4,5);
+    h+='<p class="q-label">How often do you play?</p>';
+    h+='<p class="q-sub">Include everything — matches, training, park kickabouts, all of it</p>';
+    h+=optHTML(q2opts,q2sel,"pickQ2");
+    h+='<button class="btn btn-primary"'+(q2sel<0?' disabled':'')+' onclick="goToResult()">See my starting rating</button>';
+    h+='<button class="btn btn-back" onclick="goBack(\'branch\')">Back</button>';
+  }
+  else if(step==="result"){
+    h+=dots(5,5);
+    const seed=getSeed();
+    const internal=seed+q2opts[q2sel].adj;
+    const ovr=toOVR(internal);
+    let tier="";
+    if(ovr<=65)tier="Beginner";
+    else if(ovr<=68)tier="Developing";
+    else if(ovr<=71)tier="Casual";
+    else if(ovr<=74)tier="Regular";
+    else if(ovr<=78)tier="Competitive";
+    else if(ovr<=84)tier="Advanced";
+    else if(ovr<=92)tier="Semi-pro";
+    else tier="Professional";
+
+    const q1text=q1opts[q1sel].title;
+    const brText=branches[q1opts[q1sel].id].opts[brSel].title;
+    const q2text=q2opts[q2sel].title;
+
+    h+='<div class="result-card">';
+    h+='<p class="result-name">'+playerName+'</p>';
+    h+='<p class="result-ovr">'+ovr+'</p>';
+    h+='<p class="result-tier">'+tier+'</p>';
+    h+='<div class="result-details">';
+    h+='<div class="result-row"><span class="label">Experience</span><span class="value">'+q1text+'</span></div>';
+    h+='<div class="result-row"><span class="label">Level</span><span class="value">'+brText+'</span></div>';
+    h+='<div class="result-row"><span class="label">Frequency</span><span class="value">'+q2text+'</span></div>';
+    h+='<div class="result-row"><span class="label">Starting OVR</span><span class="value" style="color:#1D9E75;font-size:16px;">'+ovr+'</span></div>';
+    h+='</div>';
+    h+='<p class="result-note">This is just your starting point. Your rating will update after every match based on how you actually perform.</p>';
+
+    const msg=encodeURIComponent("KickOff Rating Result\n\nName: "+playerName+"\nStarting OVR: "+ovr+" ("+tier+")\n\n"+q1text+" > "+brText+" > "+q2text+"\nInternal seed: "+internal);
+
+    h+='<a href="https://wa.me/?text='+msg+'" target="_blank" rel="noopener" style="text-decoration:none;">';
+    h+='<div class="btn btn-whatsapp">';
+    h+='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
+    h+='Send result to Tara';
+    h+='</div></a>';
+
+    h+='<div class="done-msg">';
+    h+='<p>Once you\'ve sent it, you\'re all set</p>';
+    h+='<p class="sub">Your starting OVR will be applied before the next match</p>';
+    h+='</div>';
+    h+='</div>';
+  }
+  app.innerHTML=h;
+
+  if(step==="name"){
+    const inp=document.getElementById("nameInput");
+    const btn=document.getElementById("nameBtn");
+    if(inp){
+      inp.addEventListener("input",function(){
+        playerName=this.value;
+        btn.disabled=!playerName.trim();
+      });
+      btn.disabled=!playerName.trim();
+      setTimeout(()=>inp.focus(),100);
+    }
+  }
+}
+
+function pickQ1(i){q1sel=i;brSel=-1;render()}
+function pickBr(i){brSel=i;render()}
+function pickQ2(i){q2sel=i;render()}
+function goToQ1(){if(!playerName.trim())return;step="q1";render()}
+function goToBranch(){step="branch";brSel=-1;render()}
+function goToQ2(){step="q2";render()}
+function goToResult(){step="result";render()}
+function goBack(s){step=s;if(s==="q1")brSel=-1;render()}
+
+render();
+</script>
+</body>
+</html>
