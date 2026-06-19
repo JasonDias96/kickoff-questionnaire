@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>KickOff Rating - Find Your Starting OVR</title>
+<title>KickOff — Join the Waitlist</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #1a1a1a; min-height: 100vh; }
@@ -17,9 +17,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .sd.active { background: #1D9E75; }
 .q-label { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
 .q-sub { font-size: 13px; color: #888; margin-bottom: 18px; line-height: 1.5; }
-.name-input { width: 100%; padding: 14px 16px; border: 1.5px solid #e0e0e0; border-radius: 12px; font-size: 16px; outline: none; transition: border-color 0.2s; font-family: inherit; }
-.name-input:focus { border-color: #1D9E75; }
-.name-input::placeholder { color: #bbb; }
+.field-input { width: 100%; padding: 14px 16px; border: 1.5px solid #e0e0e0; border-radius: 12px; font-size: 16px; outline: none; transition: border-color 0.2s; font-family: inherit; margin-bottom: 12px; }
+.field-input:focus { border-color: #1D9E75; }
+.field-input::placeholder { color: #bbb; }
+.field-input.error { border-color: #e74c3c; }
+.field-label { font-size: 12px; font-weight: 600; color: #555; margin-bottom: 6px; display: block; }
+.field-hint { font-size: 11px; color: #aaa; margin-top: -8px; margin-bottom: 12px; }
 .opt { border: 1.5px solid #e8e8e8; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
 .opt:hover { border-color: #ccc; background: #fafafa; }
 .opt:active { transform: scale(0.98); }
@@ -58,13 +61,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .done-msg { text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; }
 .done-msg p { font-size: 13px; color: #1D9E75; font-weight: 500; }
 .done-msg .sub { font-size: 12px; color: #888; font-weight: 400; margin-top: 4px; }
+.waitlist-card { text-align: center; padding: 40px 20px; }
+.waitlist-emoji { font-size: 48px; margin-bottom: 16px; }
+.waitlist-title { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+.waitlist-ovr { font-size: 14px; color: #1D9E75; font-weight: 600; margin-bottom: 20px; }
+.waitlist-msg { font-size: 13px; color: #888; line-height: 1.6; }
+.waitlist-username { font-size: 13px; color: #555; font-weight: 500; margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee; }
 </style>
 </head>
 <body>
 <div class="container">
 <div class="logo">
 <h1>KickOff</h1>
-<p>Find your starting rating — takes 30 seconds</p>
+<p>Join the waitlist and find your starting rating</p>
 </div>
 <div class="card" id="app"></div>
 </div>
@@ -113,13 +122,15 @@ const q2opts = [
   {title:"Multiple times a week",desc:"Training, matches, or kickabouts 2+ times a week. Football is a big part of your routine and you love it.",adj:50}
 ];
 
-let step="name",playerName="",q1sel=-1,brSel=-1,q2sel=-1,submitted=false;
+let step="name",playerName="",playerEmail="",playerUsername="",q1sel=-1,brSel=-1,q2sel=-1,submitted=false,submittedOvr=0;
 
 function toOVR(v){return Math.max(60,Math.min(99,Math.round(60+(v-800)*39.0/1400.0)))}
 function getSeed(){
   if(q1sel<0||brSel<0)return 1175;
   return branches[q1opts[q1sel].id].opts[brSel].seed;
 }
+function isValidEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)}
+function isValidUsername(u){return /^[a-z0-9_]{3,20}$/.test(u)}
 
 function dots(a,t){
   let h='<div class="step-dots">';
@@ -143,10 +154,14 @@ function render(){
   let h='';
 
   if(submitted){
-    h+='<div style="text-align:center;padding:40px 20px;">';
-    h+='<div style="font-size:48px;margin-bottom:12px;">&#9989;</div>';
-    h+='<p style="font-size:17px;font-weight:600;color:#1D9E75;">Already submitted</p>';
-    h+='<p style="font-size:13px;color:#888;margin-top:8px;line-height:1.6;">Your rating has been submitted to Jason. Your starting OVR will be applied before the next match. See you on the pitch!</p>';
+    h+='<div class="waitlist-card">';
+    h+='<div class="waitlist-emoji">&#127941;</div>';
+    h+='<p class="waitlist-title">Welcome to the waitlist!</p>';
+    h+='<p class="waitlist-ovr">Your starting OVR: '+submittedOvr+'</p>';
+    h+='<p class="waitlist-msg">You\'re on the list, '+playerName.split(" ")[0]+'. When KickOff launches, we\'ll send you an email so you can download the app. Your starting rating of <strong>'+submittedOvr+'</strong> will be waiting for you — ready to go from your very first match.</p>';
+    if(playerUsername){
+      h+='<p class="waitlist-username">Your username: <strong>@'+playerUsername+'</strong></p>';
+    }
     h+='</div>';
     app.innerHTML=h;
     return;
@@ -154,10 +169,22 @@ function render(){
 
   if(step==="name"){
     h+=dots(1,5);
-    h+='<p class="q-label">What\'s your name?</p>';
-    h+='<p class="q-sub">So we know whose rating this is</p>';
-    h+='<div class="once-notice"><p>You can only do this once — go with your gut. Your real matches will adjust your rating quickly anyway.</p></div>';
-    h+='<input class="name-input" type="text" placeholder="Your name" id="nameInput" value="'+playerName+'" oninput="playerName=this.value" autocomplete="off" autocapitalize="words">';
+    h+='<p class="q-label">Let\'s get you set up</p>';
+    h+='<p class="q-sub">We\'ll use this to create your account when the app launches</p>';
+    h+='<div class="once-notice"><p>You can only do this once — go with your gut on the questions. Your real matches will adjust your rating quickly anyway.</p></div>';
+
+    h+='<label class="field-label">Your name</label>';
+    h+='<input class="field-input" type="text" placeholder="e.g. Jason Dias" id="nameInput" value="'+playerName+'" autocomplete="name" autocapitalize="words">';
+
+    h+='<label class="field-label">Email address</label>';
+    h+='<input class="field-input" type="email" placeholder="e.g. jason@email.com" id="emailInput" value="'+playerEmail+'" autocomplete="email">';
+    h+='<p class="field-hint">We\'ll notify you when the app is ready to download</p>';
+
+    h+='<label class="field-label">Preferred username</label>';
+    h+='<input class="field-input" type="text" placeholder="e.g. jasondias96" id="usernameInput" value="'+playerUsername+'" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">';
+    h+='<p class="field-hint">Lowercase letters, numbers, and underscores only (3–20 characters)</p>';
+
+    h+='<p id="nameError" style="font-size:12px;color:#e74c3c;margin-top:4px;display:none;"></p>';
     h+='<button class="btn btn-primary" onclick="goToQ1()" id="nameBtn">Let\'s go</button>';
   }
   else if(step==="q1"){
@@ -217,29 +244,41 @@ function render(){
     h+='<div class="result-row"><span class="label">Frequency</span><span class="value">'+q2text+'</span></div>';
     h+='<div class="result-row"><span class="label">Starting OVR</span><span class="value" style="color:#1D9E75;font-size:16px;">'+ovr+'</span></div>';
     h+='</div>';
-    h+='<p class="result-note">This gives KickOff a rough starting point for your ability. The more games you play, the more accurate your rating becomes.</p>';
+    h+='<p class="result-note">This is your starting point. The more games you play on KickOff, the more accurate your rating becomes.</p>';
 
-    h+='<button class="btn btn-submit" id="submitBtn" onclick="submitResult()">Submit my rating</button>';
+    h+='<button class="btn btn-submit" id="submitBtn" onclick="submitResult()">Join the waitlist</button>';
     h+='<p id="submitError" style="font-size:12px;color:#e74c3c;text-align:center;margin-top:8px;display:none;"></p>';
 
     h+='<div class="done-msg">';
-    h+='<p>Your result goes straight to Jason</p>';
-    h+='<p class="sub">Your starting OVR will be applied before the next match</p>';
+    h+='<p>We\'ll email you when KickOff launches</p>';
+    h+='<p class="sub">Your starting OVR will be ready from day one</p>';
     h+='</div>';
     h+='</div>';
   }
   app.innerHTML=h;
 
   if(step==="name"){
-    const inp=document.getElementById("nameInput");
+    const nameInp=document.getElementById("nameInput");
+    const emailInp=document.getElementById("emailInput");
+    const usernameInp=document.getElementById("usernameInput");
     const btn=document.getElementById("nameBtn");
-    if(inp){
-      inp.addEventListener("input",function(){
-        playerName=this.value;
-        btn.disabled=!playerName.trim();
-      });
-      btn.disabled=!playerName.trim();
-      setTimeout(()=>inp.focus(),100);
+    const errEl=document.getElementById("nameError");
+
+    function syncValues(){
+      playerName=nameInp.value;
+      playerEmail=emailInp.value;
+      playerUsername=usernameInp.value.toLowerCase().replace(/[^a-z0-9_]/g,"");
+      usernameInp.value=playerUsername;
+      btn.disabled=!(playerName.trim()&&playerEmail.trim()&&playerUsername.trim());
+      errEl.style.display="none";
+    }
+
+    if(nameInp){
+      nameInp.addEventListener("input",syncValues);
+      emailInp.addEventListener("input",syncValues);
+      usernameInp.addEventListener("input",syncValues);
+      btn.disabled=!(playerName.trim()&&playerEmail.trim()&&playerUsername.trim());
+      setTimeout(()=>nameInp.focus(),100);
     }
   }
 }
@@ -247,7 +286,25 @@ function render(){
 function pickQ1(i){q1sel=i;brSel=-1;render()}
 function pickBr(i){brSel=i;render()}
 function pickQ2(i){q2sel=i;render()}
-function goToQ1(){if(!playerName.trim())return;step="q1";render()}
+
+function goToQ1(){
+  if(!playerName.trim()||!playerEmail.trim()||!playerUsername.trim())return;
+  const errEl=document.getElementById("nameError");
+  if(!isValidEmail(playerEmail)){
+    errEl.textContent="Please enter a valid email address";
+    errEl.style.display="block";
+    document.getElementById("emailInput").classList.add("error");
+    return;
+  }
+  if(!isValidUsername(playerUsername)){
+    errEl.textContent="Username must be 3–20 characters: lowercase letters, numbers, or underscores";
+    errEl.style.display="block";
+    document.getElementById("usernameInput").classList.add("error");
+    return;
+  }
+  step="q1";render();
+}
+
 function goToBranch(){step="branch";brSel=-1;render()}
 function goToQ2(){step="q2";render()}
 function goToResult(){step="result";render()}
@@ -261,7 +318,7 @@ function submitResult(){
   const errEl=document.getElementById("submitError");
   if(!btn||btn.disabled)return;
   btn.disabled=true;
-  btn.textContent="Submitting...";
+  btn.textContent="Joining...";
   btn.classList.add("btn-submitting");
   errEl.style.display="none";
 
@@ -280,6 +337,8 @@ function submitResult(){
 
   const body={
     name:playerName,
+    email:playerEmail.toLowerCase().trim(),
+    preferred_username:playerUsername,
     experience:q1opts[q1sel].title,
     level:branches[q1opts[q1sel].id].opts[brSel].title,
     frequency:q2opts[q2sel].title,
@@ -300,15 +359,22 @@ function submitResult(){
   }).then(function(r){
     if(r.ok){
       submitted=true;
+      submittedOvr=ovr;
       render();
+    } else if(r.status===409){
+      throw new Error("duplicate");
     } else {
       throw new Error("Failed: "+r.status);
     }
   }).catch(function(e){
     btn.disabled=false;
-    btn.textContent="Submit my rating";
+    btn.textContent="Join the waitlist";
     btn.classList.remove("btn-submitting");
-    errEl.textContent="Something went wrong — try again";
+    if(e.message==="duplicate"){
+      errEl.textContent="This email is already on the waitlist!";
+    } else {
+      errEl.textContent="Something went wrong — try again";
+    }
     errEl.style.display="block";
   });
 }
