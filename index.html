@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: hsl(240, 10%, 3.9%); color: hsl(0, 0%, 98%); min-height: 100vh; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+body { font-family: 'Inter', sans-serif; background: hsl(240, 10%, 3.9%); color: hsl(0, 0%, 98%); min-height: 100vh; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 .container { max-width: 440px; margin: 0 auto; padding: 16px; min-height: 100vh; display: flex; flex-direction: column; gap: 16px; align-items: center; }
 
 /* Logo / Header */
@@ -50,14 +50,16 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   font-size: 16px;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
-  font-family: 'Inter', inherit;
+  font-family: 'Inter', sans-serif;
   margin-bottom: 12px;
   background: #0F170B;
   color: hsl(0, 0%, 98%);
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
 }
-.field-input:focus { border-color: #4bff60; box-shadow: 0 0 0 2px rgba(75, 255, 96, 0.15); }
+.field-input:focus { border-color: #416244; box-shadow: none; outline: none; }
 .field-input::placeholder { color: hsl(240, 5%, 35%); }
-.field-input.error { border-color: #FF4444; box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.15); }
+.field-input.error { border-color: #FF4444; box-shadow: none; }
 .field-hint { font-size: 11px; color: hsl(240, 5%, 50%); margin-top: -8px; margin-bottom: 12px; }
 
 /* Option cards */
@@ -85,7 +87,8 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
 .dot.on::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #0F170B; }
 
 /* Buttons */
-.btn { display: block; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; text-align: center; font-family: 'Inter', inherit; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+.btn { display: block; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; text-align: center; font-family: 'Inter', sans-serif; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+input, button, select, textarea { font-family: 'Inter', sans-serif; }
 .btn:active { transform: scale(0.98); }
 .btn-primary {
   background: #152713;
