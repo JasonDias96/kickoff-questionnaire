@@ -4,69 +4,162 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>KickOff — Join the Waitlist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #1a1a1a; min-height: 100vh; }
-.container { max-width: 440px; margin: 0 auto; padding: 16px; min-height: 100vh; }
-.logo { text-align: center; padding: 24px 0 8px; }
-.logo h1 { font-size: 22px; font-weight: 600; color: #1D9E75; }
-.logo p { font-size: 13px; color: #888; margin-top: 4px; }
-.card { background: #fff; border-radius: 16px; padding: 24px 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-.step-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.sd { width: 8px; height: 8px; border-radius: 50%; background: #ddd; transition: background 0.2s; }
-.sd.active { background: #1D9E75; }
-.q-label { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
-.q-sub { font-size: 13px; color: #888; margin-bottom: 18px; line-height: 1.5; }
-.field-input { width: 100%; padding: 14px 16px; border: 1.5px solid #e0e0e0; border-radius: 12px; font-size: 16px; outline: none; transition: border-color 0.2s; font-family: inherit; margin-bottom: 12px; }
-.field-input:focus { border-color: #1D9E75; }
-.field-input::placeholder { color: #bbb; }
-.field-input.error { border-color: #e74c3c; }
-.field-label { font-size: 12px; font-weight: 600; color: #555; margin-bottom: 6px; display: block; }
-.field-hint { font-size: 11px; color: #aaa; margin-top: -8px; margin-bottom: 12px; }
-.opt { border: 1.5px solid #e8e8e8; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
-.opt:hover { border-color: #ccc; background: #fafafa; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: hsl(240, 10%, 3.9%); color: hsl(0, 0%, 98%); min-height: 100vh; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.container { max-width: 440px; margin: 0 auto; padding: 16px; min-height: 100vh; display: flex; flex-direction: column; gap: 16px; align-items: center; }
+
+/* Logo / Header */
+.logo { text-align: center; padding: 24px 0 4px; }
+.logo h1 { font-size: 20px; font-weight: 800; color: #4bff60; text-transform: uppercase; letter-spacing: 2px; }
+.logo p { font-size: 13px; color: hsl(240, 5%, 64.9%); margin-top: 6px; font-weight: 400; }
+
+/* Content shell — matches the app's Content component */
+.card {
+  width: calc(100% + 32px);
+  margin-left: -16px;
+  margin-right: -16px;
+  background: #0F170B;
+  border-radius: 40px;
+  border: 1px solid #416244;
+  padding: 32px 24px;
+  flex-grow: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Step dots */
+.step-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+.sd { width: 8px; height: 8px; border-radius: 50%; background: #1e2a1a; border: 1px solid #416244; transition: all 0.3s; }
+.sd.active { background: #4bff60; border-color: #4bff60; box-shadow: 0 0 8px rgba(75, 255, 96, 0.3); }
+
+/* Question text */
+.q-label { font-size: 17px; font-weight: 700; margin-bottom: 4px; color: hsl(0, 0%, 98%); }
+.q-sub { font-size: 13px; color: hsl(240, 5%, 64.9%); margin-bottom: 20px; line-height: 1.5; }
+
+/* Input fields */
+.field-label { font-size: 11px; font-weight: 700; color: hsl(240, 5%, 64.9%); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+.field-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #416244;
+  border-radius: 12px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: 'Inter', inherit;
+  margin-bottom: 12px;
+  background: #0F170B;
+  color: hsl(0, 0%, 98%);
+}
+.field-input:focus { border-color: #4bff60; box-shadow: 0 0 0 2px rgba(75, 255, 96, 0.15); }
+.field-input::placeholder { color: hsl(240, 5%, 35%); }
+.field-input.error { border-color: #FF4444; box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.15); }
+.field-hint { font-size: 11px; color: hsl(240, 5%, 50%); margin-top: -8px; margin-bottom: 12px; }
+
+/* Option cards */
+.opt {
+  border: 1px solid #416244;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  background: #152713;
+}
+.opt:hover { border-color: #5a8a5e; background: #1a3118; }
 .opt:active { transform: scale(0.98); }
-.opt.sel { border-color: #1D9E75; background: #f0faf6; }
-.opt-title { font-size: 15px; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 10px; }
-.opt-desc { font-size: 12px; color: #888; line-height: 1.5; padding-left: 28px; }
-.opt.sel .opt-title { color: #0a6e4a; }
-.opt.sel .opt-desc { color: #1D9E75; }
-.dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ccc; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-.dot.on { border-color: #1D9E75; background: #1D9E75; }
-.dot.on::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #fff; }
-.btn { display: block; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; text-align: center; font-family: inherit; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+.opt.sel { border-color: #4bff60; background: rgba(75, 255, 96, 0.08); }
+.opt-title { font-size: 15px; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 10px; color: hsl(0, 0%, 90%); }
+.opt-desc { font-size: 12px; color: hsl(240, 5%, 55%); line-height: 1.5; padding-left: 28px; }
+.opt.sel .opt-title { color: #4bff60; }
+.opt.sel .opt-desc { color: hsl(240, 5%, 64.9%); }
+
+/* Radio dot */
+.dot { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #416244; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.dot.on { border-color: #4bff60; background: #4bff60; }
+.dot.on::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #0F170B; }
+
+/* Buttons */
+.btn { display: block; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; text-align: center; font-family: 'Inter', inherit; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
 .btn:active { transform: scale(0.98); }
-.btn-primary { background: #1D9E75; color: #fff; margin-top: 16px; }
-.btn-primary:hover { background: #178a64; }
-.btn-primary:disabled { opacity: 0.4; cursor: default; transform: none; }
-.btn-back { background: transparent; color: #888; margin-top: 8px; font-size: 14px; }
-.btn-submit { background: #1D9E75; color: #fff; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 16px; }
-.btn-submit:hover { background: #178a64; }
-.btn-submit:disabled { opacity: 0.5; cursor: default; transform: none; }
-.btn-submitting { background: #888; }
-.hint { background: #FFF8EC; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
+.btn-primary {
+  background: #152713;
+  color: hsl(0, 0%, 98%);
+  margin-top: 16px;
+  border: 1px solid #416244;
+}
+.btn-primary:hover { background: #1a3118; border-color: #4bff60; }
+.btn-primary:disabled { opacity: 0.3; cursor: default; transform: none; }
+.btn-back { background: transparent; color: hsl(240, 5%, 55%); margin-top: 8px; font-size: 14px; }
+.btn-back:hover { color: hsl(240, 5%, 75%); }
+.btn-submit {
+  background: #4bff60;
+  color: #0F170B;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+}
+.btn-submit:hover { background: #3de050; }
+.btn-submit:disabled { opacity: 0.4; cursor: default; transform: none; }
+.btn-submitting { background: #416244; color: hsl(0, 0%, 70%); }
+
+/* Hint / Warning box */
+.hint { background: rgba(75, 255, 96, 0.06); border: 1px solid rgba(75, 255, 96, 0.15); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
 .hint-icon { font-size: 18px; flex-shrink: 0; }
-.hint p { font-size: 12px; color: #8B6914; line-height: 1.5; }
-.once-notice { background: #f0faf6; border-radius: 10px; padding: 12px 14px; margin-bottom: 18px; }
-.once-notice p { font-size: 12px; color: #0a6e4a; line-height: 1.5; text-align: center; }
-.result-card { text-align: center; padding: 32px 20px; }
-.result-name { font-size: 14px; color: #888; margin-bottom: 4px; }
-.result-ovr { font-size: 72px; font-weight: 700; color: #1a1a1a; line-height: 1; }
-.result-tier { font-size: 15px; color: #1D9E75; font-weight: 600; margin-top: 4px; }
-.result-details { margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; text-align: left; }
-.result-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; }
-.result-row .label { color: #888; }
-.result-row .value { font-weight: 600; text-align: right; max-width: 60%; }
-.result-note { font-size: 12px; color: #888; text-align: center; margin-top: 16px; line-height: 1.6; }
-.done-msg { text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; }
-.done-msg p { font-size: 13px; color: #1D9E75; font-weight: 500; }
-.done-msg .sub { font-size: 12px; color: #888; font-weight: 400; margin-top: 4px; }
-.waitlist-card { text-align: center; padding: 40px 20px; }
+.hint p { font-size: 12px; color: hsl(240, 5%, 64.9%); line-height: 1.5; }
+
+/* Once notice */
+.once-notice { background: rgba(75, 255, 96, 0.06); border: 1px solid rgba(75, 255, 96, 0.12); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; }
+.once-notice p { font-size: 12px; color: hsl(240, 5%, 64.9%); line-height: 1.5; text-align: center; }
+
+/* Result card */
+.result-card { text-align: center; padding: 24px 0; }
+.result-name { font-size: 13px; color: hsl(240, 5%, 55%); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.result-ovr { font-size: 72px; font-weight: 800; color: hsl(0, 0%, 98%); line-height: 1; }
+.result-tier { font-size: 15px; color: #4bff60; font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.result-details { margin-top: 24px; padding-top: 16px; border-top: 1px solid #416244; text-align: left; }
+.result-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; }
+.result-row .label { color: hsl(240, 5%, 55%); font-weight: 500; }
+.result-row .value { font-weight: 600; text-align: right; max-width: 60%; color: hsl(0, 0%, 90%); }
+.result-note { font-size: 12px; color: hsl(240, 5%, 50%); text-align: center; margin-top: 16px; line-height: 1.6; }
+
+/* Done message */
+.done-msg { text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid #416244; }
+.done-msg p { font-size: 13px; color: #4bff60; font-weight: 600; }
+.done-msg .sub { font-size: 12px; color: hsl(240, 5%, 55%); font-weight: 400; margin-top: 4px; }
+
+/* Waitlist confirmation */
+.waitlist-card { text-align: center; padding: 32px 0; }
 .waitlist-emoji { font-size: 48px; margin-bottom: 16px; }
-.waitlist-title { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
-.waitlist-ovr { font-size: 14px; color: #1D9E75; font-weight: 600; margin-bottom: 20px; }
-.waitlist-msg { font-size: 13px; color: #888; line-height: 1.6; }
-.waitlist-username { font-size: 13px; color: #555; font-weight: 500; margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee; }
+.waitlist-title { font-size: 22px; font-weight: 800; color: hsl(0, 0%, 98%); margin-bottom: 4px; }
+.waitlist-ovr { font-size: 14px; color: #4bff60; font-weight: 700; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.5px; }
+.waitlist-msg { font-size: 13px; color: hsl(240, 5%, 64.9%); line-height: 1.7; }
+.waitlist-msg strong { color: #4bff60; font-weight: 700; }
+.waitlist-username { font-size: 13px; color: hsl(240, 5%, 64.9%); font-weight: 500; margin-top: 20px; padding-top: 20px; border-top: 1px solid #416244; }
+.waitlist-username strong { color: #4bff60; }
+
+/* Stat card row on result page */
+.stat-row { display: flex; gap: 8px; margin-top: 16px; }
+.stat-card {
+  flex: 1;
+  background: #152713;
+  border: 1px solid #416244;
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+}
+.stat-card .stat-val { font-size: 22px; font-weight: 800; color: hsl(0, 0%, 98%); }
+.stat-card .stat-label { font-size: 10px; font-weight: 700; color: hsl(240, 5%, 55%); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 </style>
 </head>
 <body>
@@ -184,7 +277,7 @@ function render(){
     h+='<input class="field-input" type="text" placeholder="e.g. jasondias96" id="usernameInput" value="'+playerUsername+'" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">';
     h+='<p class="field-hint">Lowercase letters, numbers, and underscores only (3–20 characters)</p>';
 
-    h+='<p id="nameError" style="font-size:12px;color:#e74c3c;margin-top:4px;display:none;"></p>';
+    h+='<p id="nameError" style="font-size:12px;color:#FF4444;margin-top:4px;display:none;"></p>';
     h+='<button class="btn btn-primary" onclick="goToQ1()" id="nameBtn">Let\'s go</button>';
   }
   else if(step==="q1"){
@@ -238,16 +331,22 @@ function render(){
     h+='<p class="result-name">'+playerName+'</p>';
     h+='<p class="result-ovr">'+ovr+'</p>';
     h+='<p class="result-tier">'+tier+'</p>';
+
+    h+='<div class="stat-row">';
+    h+='<div class="stat-card"><div class="stat-val">'+ovr+'</div><div class="stat-label">OVR</div></div>';
+    h+='<div class="stat-card"><div class="stat-val" style="font-size:14px;">'+tier+'</div><div class="stat-label">Tier</div></div>';
+    h+='<div class="stat-card"><div class="stat-val" style="font-size:14px;">'+q2text.split(" ")[0]+'</div><div class="stat-label">Frequency</div></div>';
+    h+='</div>';
+
     h+='<div class="result-details">';
     h+='<div class="result-row"><span class="label">Experience</span><span class="value">'+q1text+'</span></div>';
     h+='<div class="result-row"><span class="label">Level</span><span class="value">'+brText+'</span></div>';
     h+='<div class="result-row"><span class="label">Frequency</span><span class="value">'+q2text+'</span></div>';
-    h+='<div class="result-row"><span class="label">Starting OVR</span><span class="value" style="color:#1D9E75;font-size:16px;">'+ovr+'</span></div>';
     h+='</div>';
     h+='<p class="result-note">This is your starting point. The more games you play on KickOff, the more accurate your rating becomes.</p>';
 
     h+='<button class="btn btn-submit" id="submitBtn" onclick="submitResult()">Join the waitlist</button>';
-    h+='<p id="submitError" style="font-size:12px;color:#e74c3c;text-align:center;margin-top:8px;display:none;"></p>';
+    h+='<p id="submitError" style="font-size:12px;color:#FF4444;text-align:center;margin-top:8px;display:none;"></p>';
 
     h+='<div class="done-msg">';
     h+='<p>We\'ll email you when KickOff launches</p>';
