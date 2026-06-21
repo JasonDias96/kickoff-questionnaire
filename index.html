@@ -163,6 +163,14 @@ input, button, select, textarea { font-family: 'Inter', sans-serif; }
 }
 .stat-card .stat-val { font-size: 18px; font-weight: 800; color: hsl(0, 0%, 98%); }
 .stat-card .stat-label { font-size: 9px; font-weight: 700; color: hsl(240, 5%, 55%); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* Username availability */
+.username-status { font-size: 10px; margin-top: -6px; margin-bottom: 10px; font-weight: 500; min-height: 14px; }
+.username-status.checking { color: hsl(240, 5%, 50%); }
+.username-status.available { color: #4bff60; }
+.username-status.taken { color: #FF4444; }
+.field-input.valid-username { border-color: #4bff60; }
+.field-input.taken-username { border-color: #FF4444; }
 </style>
 </head>
 <body>
@@ -279,7 +287,7 @@ function render(){
     h+='<input class="field-input" type="email" placeholder="e.g. john@email.com" id="emailInput" value="'+playerEmail+'" autocomplete="email">';
     h+='<p class="field-hint">We\'ll notify you when the app is ready to download</p>';
 
-    h+='<label class="field-label">Preferred username</label>';
+    h+='<label class="field-label">Username <span style="color:#FF4444;">*</span></label>';
     h+='<input class="field-input" type="text" placeholder="e.g. johnsmith96" id="usernameInput" value="'+playerUsername+'" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">';
     h+='<p class="field-hint">Lowercase letters, numbers, and underscores only (3–20 characters)</p>';
 
@@ -374,10 +382,12 @@ function render(){
       playerFirstName=firstNameInp.value;
       playerLastName=lastNameInp.value;
       playerEmail=emailInp.value;
+      const prev=playerUsername;
       playerUsername=usernameInp.value.toLowerCase().replace(/[^a-z0-9_]/g,"");
       usernameInp.value=playerUsername;
-      btn.disabled=!(playerFirstName.trim()&&playerEmail.trim()&&playerUsername.trim());
       errEl.style.display="none";
+      if(playerUsername!==prev){usernameAvailable=null;checkUsername(playerUsername);}
+      updateNameBtn();
     }
 
     if(firstNameInp){
@@ -385,7 +395,7 @@ function render(){
       lastNameInp.addEventListener("input",syncValues);
       emailInp.addEventListener("input",syncValues);
       usernameInp.addEventListener("input",syncValues);
-      btn.disabled=!(playerFirstName.trim()&&playerEmail.trim()&&playerUsername.trim());
+      btn.disabled=!(playerFirstName.trim()&&playerEmail.trim()&&playerUsername.trim()&&usernameAvailable===true);
       setTimeout(()=>firstNameInp.focus(),100);
     }
   }
@@ -396,7 +406,7 @@ function pickBr(i){brSel=i;render()}
 function pickQ2(i){q2sel=i;render()}
 
 function goToQ1(){
-  if(!playerFirstName.trim()||!playerEmail.trim()||!playerUsername.trim())return;
+  if(!playerFirstName.trim()||!playerEmail.trim()||!playerUsername.trim()||usernameAvailable!==true)return;
   const errEl=document.getElementById("nameError");
   if(!isValidEmail(playerEmail)){
     errEl.textContent="Please enter a valid email address";
@@ -418,6 +428,66 @@ function goToQ2(){step="q2";render()}
 function goToResult(){step="result";render()}
 function goBack(s){step=s;if(s==="q1")brSel=-1;render()}
 
+
+const BACKEND_URL="https://web-production-2d2ae.up.railway.app";
+let usernameTimer=null,usernameAvailable=null;
+
+function checkUsername(u){
+  const statusEl=document.getElementById("usernameStatus");
+  const inp=document.getElementById("usernameInput");
+  if(!statusEl||!inp)return;
+  usernameAvailable=null;
+  inp.classList.remove("valid-username","taken-username");
+  if(!u||u.length<3){
+    statusEl.textContent=u?"3–20 chars: lowercase letters, numbers, underscores":"";
+    statusEl.className="username-status";
+    updateNameBtn();
+    return;
+  }
+  if(!/^[a-z0-9_]{3,20}$/.test(u)){
+    statusEl.textContent="Only lowercase letters, numbers, and underscores (3–20 chars)";
+    statusEl.className="username-status taken";
+    updateNameBtn();
+    return;
+  }
+  statusEl.textContent="Checking...";
+  statusEl.className="username-status checking";
+  clearTimeout(usernameTimer);
+  usernameTimer=setTimeout(function(){
+    fetch(BACKEND_URL+"/check-username/"+encodeURIComponent(u))
+    .then(function(r){return r.json()})
+    .then(function(d){
+      if(playerUsername!==u)return;
+      const el=document.getElementById("usernameStatus");
+      const ip=document.getElementById("usernameInput");
+      if(!el||!ip)return;
+      if(d.available){
+        el.textContent="\u2713 Username available";
+        el.className="username-status available";
+        ip.classList.add("valid-username");
+        ip.classList.remove("taken-username");
+        usernameAvailable=true;
+      } else {
+        el.textContent="\u2717 Username already taken";
+        el.className="username-status taken";
+        ip.classList.add("taken-username");
+        ip.classList.remove("valid-username");
+        usernameAvailable=false;
+      }
+      updateNameBtn();
+    })
+    .catch(function(){
+      usernameAvailable=true;
+      updateNameBtn();
+    });
+  },400);
+}
+
+function updateNameBtn(){
+  const btn=document.getElementById("nameBtn");
+  if(!btn)return;
+  btn.disabled=!(playerFirstName.trim()&&playerEmail.trim()&&playerUsername.trim()&&usernameAvailable===true);
+}
 const SUPABASE_URL="https://gasaitelsorrofjajnfj.supabase.co";
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdhc2FpdGVsc29ycm9mamFqbmZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxODQ5MTgsImV4cCI6MjA5Mzc2MDkxOH0.j6YUdEGsqmUBvyZYEDD0pvc56nyeOUZWcR2q0yg8RUM";
 
