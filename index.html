@@ -289,7 +289,7 @@ function render(){
 
     h+='<label class="field-label">Username <span style="color:#FF4444;">*</span></label>';
     h+='<input class="field-input" type="text" placeholder="e.g. johnsmith96" id="usernameInput" value="'+playerUsername+'" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">';
-    h+='<p class="field-hint">Lowercase letters, numbers, and underscores only (3–20 characters)</p>';
+    h+='<p id="usernameStatus" class="username-status"></p>';
 
     h+='<p id="nameError" style="font-size:12px;color:#FF4444;margin-top:4px;display:none;"></p>';
     h+='<button class="btn btn-primary" onclick="goToQ1()" id="nameBtn">Let\'s go</button>';
