@@ -218,7 +218,8 @@ const q2opts = [
   {title:"Multiple times a week",desc:"Training, matches, or kickabouts 2+ times a week. Football is a big part of your routine and you love it.",adj:50}
 ];
 
-let step="name",playerName="",playerEmail="",playerUsername="",q1sel=-1,brSel=-1,q2sel=-1,submitted=false,submittedOvr=0;
+let step="name",playerFirstName="",playerLastName="",playerEmail="",playerUsername="",q1sel=-1,brSel=-1,q2sel=-1,submitted=false,submittedOvr=0;
+function getPlayerName(){return (playerFirstName.trim()+(playerLastName.trim()?" "+playerLastName.trim():""));}
 
 function toOVR(v){return Math.max(60,Math.min(99,Math.round(60+(v-800)*39.0/1400.0)))}
 function getSeed(){
@@ -254,7 +255,7 @@ function render(){
     h+='<div class="waitlist-emoji">&#127941;</div>';
     h+='<p class="waitlist-title">Welcome to the waitlist!</p>';
     h+='<p class="waitlist-ovr">Your starting OVR: '+submittedOvr+'</p>';
-    h+='<p class="waitlist-msg">You\'re on the list, '+playerName.split(" ")[0]+'. When KickOff launches, we\'ll send you an email so you can download the app. Your starting rating of <strong>'+submittedOvr+'</strong> will be waiting for you — ready to go from your very first match.</p>';
+    h+='<p class="waitlist-msg">You\'re on the list, '+playerFirstName+'. When KickOff launches, we\'ll send you an email so you can download the app. Your starting rating of <strong>'+submittedOvr+'</strong> will be waiting for you — ready to go from your very first match.</p>';
     if(playerUsername){
       h+='<p class="waitlist-username">Your username: <strong>@'+playerUsername+'</strong></p>';
     }
@@ -269,10 +270,12 @@ function render(){
     h+='<p class="q-sub">We\'ll use this to create your account when the app launches</p>';
     h+='<div class="once-notice"><p>You can only do this once — go with your gut on the questions. Your real matches will adjust your rating quickly anyway.</p></div>';
 
-    h+='<label class="field-label">Your name</label>';
-    h+='<input class="field-input" type="text" placeholder="e.g. John Smith" id="nameInput" value="'+playerName+'" autocomplete="name" autocapitalize="words">';
+    h+='<label class="field-label">First name <span style="color:#FF4444;">*</span></label>';
+    h+='<input class="field-input" type="text" placeholder="e.g. John" id="firstNameInput" value="'+playerFirstName+'" autocomplete="given-name" autocapitalize="words">';
+    h+='<label class="field-label">Last name <span style="font-weight:400;color:hsl(240,5%,45%);">(optional)</span></label>';
+    h+='<input class="field-input" type="text" placeholder="e.g. Smith" id="lastNameInput" value="'+playerLastName+'" autocomplete="family-name" autocapitalize="words">';
 
-    h+='<label class="field-label">Email address</label>';
+    h+='<label class="field-label">Email address <span style="color:#FF4444;">*</span></label>';
     h+='<input class="field-input" type="email" placeholder="e.g. john@email.com" id="emailInput" value="'+playerEmail+'" autocomplete="email">';
     h+='<p class="field-hint">We\'ll notify you when the app is ready to download</p>';
 
@@ -331,7 +334,7 @@ function render(){
     const q2text=q2opts[q2sel].title;
 
     h+='<div class="result-card">';
-    h+='<p class="result-name">'+playerName+'</p>';
+    h+='<p class="result-name">'+getPlayerName()+'</p>';
     h+='<p class="result-ovr">'+ovr+'</p>';
     h+='<p class="result-tier">'+tier+'</p>';
 
@@ -360,27 +363,30 @@ function render(){
   app.innerHTML=h;
 
   if(step==="name"){
-    const nameInp=document.getElementById("nameInput");
+    const firstNameInp=document.getElementById("firstNameInput");
+    const lastNameInp=document.getElementById("lastNameInput");
     const emailInp=document.getElementById("emailInput");
     const usernameInp=document.getElementById("usernameInput");
     const btn=document.getElementById("nameBtn");
     const errEl=document.getElementById("nameError");
 
     function syncValues(){
-      playerName=nameInp.value;
+      playerFirstName=firstNameInp.value;
+      playerLastName=lastNameInp.value;
       playerEmail=emailInp.value;
       playerUsername=usernameInp.value.toLowerCase().replace(/[^a-z0-9_]/g,"");
       usernameInp.value=playerUsername;
-      btn.disabled=!(playerName.trim()&&playerEmail.trim()&&playerUsername.trim());
+      btn.disabled=!(playerFirstName.trim()&&playerEmail.trim()&&playerUsername.trim());
       errEl.style.display="none";
     }
 
-    if(nameInp){
-      nameInp.addEventListener("input",syncValues);
+    if(firstNameInp){
+      firstNameInp.addEventListener("input",syncValues);
+      lastNameInp.addEventListener("input",syncValues);
       emailInp.addEventListener("input",syncValues);
       usernameInp.addEventListener("input",syncValues);
-      btn.disabled=!(playerName.trim()&&playerEmail.trim()&&playerUsername.trim());
-      setTimeout(()=>nameInp.focus(),100);
+      btn.disabled=!(playerFirstName.trim()&&playerEmail.trim()&&playerUsername.trim());
+      setTimeout(()=>firstNameInp.focus(),100);
     }
   }
 }
@@ -390,7 +396,7 @@ function pickBr(i){brSel=i;render()}
 function pickQ2(i){q2sel=i;render()}
 
 function goToQ1(){
-  if(!playerName.trim()||!playerEmail.trim()||!playerUsername.trim())return;
+  if(!playerFirstName.trim()||!playerEmail.trim()||!playerUsername.trim())return;
   const errEl=document.getElementById("nameError");
   if(!isValidEmail(playerEmail)){
     errEl.textContent="Please enter a valid email address";
@@ -438,7 +444,7 @@ function submitResult(){
   else tier="Professional";
 
   const body={
-    name:playerName,
+    name:getPlayerName(),
     email:playerEmail.toLowerCase().trim(),
     preferred_username:playerUsername,
     experience:q1opts[q1sel].title,
