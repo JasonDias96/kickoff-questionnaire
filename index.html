@@ -219,8 +219,7 @@ const q2opts = [
 ];
 
 let step="name",playerName="",playerEmail="",playerUsername="",q1sel=-1,brSel=-1,q2sel=-1,submitted=false,submittedOvr=0;
-let usernameStatus="idle";
-// idle | checking | available | taken | invalid
+let usernameStatus="idle"; // idle | checking | available | taken | invalid
 let usernameCheckTimer=null;
 let emailStatus="idle"; // idle | checking | available | taken
 let emailCheckTimer=null;
@@ -361,14 +360,14 @@ function render(){
     h+='<div class="once-notice"><p>You can only do this once - go with your gut on the questions. Your real matches will adjust your rating quickly anyway.</p></div>';
 
     h+='<label class="field-label">Your name</label>';
-    h+='<input class="field-input" type="text" placeholder="e.g. Jason Dias" id="nameInput" value="'+playerName+'" autocomplete="name" autocapitalize="words">';
+    h+='<input class="field-input" type="text" placeholder="e.g. John Smith" id="nameInput" value="'+playerName+'" autocomplete="name" autocapitalize="words">';
 
     h+='<label class="field-label">Email address</label>';
-    h+='<input class="field-input" type="email" placeholder="e.g. jason@email.com" id="emailInput" value="'+playerEmail+'" autocomplete="email">';
+    h+='<input class="field-input" type="email" placeholder="e.g. john@email.com" id="emailInput" value="'+playerEmail+'" autocomplete="email">';
     h+='<p class="field-hint" id="emailHint">We\'ll notify you when the app is ready to download</p>';
 
     h+='<label class="field-label">Preferred username</label>';
-    h+='<input class="field-input" type="text" placeholder="e.g. jasondias96" id="usernameInput" value="'+playerUsername+'" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">';
+    h+='<input class="field-input" type="text" placeholder="e.g. johnsmith96" id="usernameInput" value="'+playerUsername+'" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">';
     h+='<p class="field-hint" id="usernameHint">Lowercase letters, numbers, and underscores only (3-20 characters)</p>';
 
     h+='<p id="nameError" style="font-size:12px;color:#FF4444;margin-top:4px;display:none;"></p>';
