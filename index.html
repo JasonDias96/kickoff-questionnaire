@@ -357,10 +357,11 @@ function render(){
 
     h+='<label class="field-label">Email address <span style="color:#FF4444;">*</span></label>';
     h+='<input class="field-input" type="email" placeholder="e.g. john@email.com" id="emailInput" value="'+playerEmail+'" autocomplete="email">';
-    h+='<p class="field-hint" id="usernameHint">We\'ll notify you when the app is ready to download</p>';
+    h+='<p class="field-hint" id="emailHint">We\'ll notify you when the app is ready to download</p>';
 
     h+='<label class="field-label">Username <span style="color:#FF4444;">*</span></label>';
     h+='<input class="field-input" type="text" placeholder="e.g. johnsmith96" id="usernameInput" value="'+playerUsername+'" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">';
+    h+='<p class="field-hint" id="usernameHint">Lowercase letters, numbers, and underscores only (3-20 characters)</p>';
     h+='<p id="usernameStatus" class="username-status"></p>';
 
     h+='<p id="nameError" style="font-size:12px;color:#FF4444;margin-top:4px;display:none;"></p>';
