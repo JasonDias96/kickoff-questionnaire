@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KickOff - Signups Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; color: #1a1a1a; }
+
+/* Login gate */
+#login-screen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #0a0f0a 0%, #1a2e1a 100%);
+}
+.login-box {
+  background: #0F170B; border: 1px solid #416244; border-radius: 20px;
+  padding: 40px 32px; width: 340px; text-align: center;
+}
+.login-box h1 { color: #fafafa; font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.login-box .sub { color: #888; font-size: 12px; margin-bottom: 28px; }
+.login-box input {
+  width: 100%; padding: 12px 16px; border: 1px solid #416244; border-radius: 10px;
+  background: #152713; color: #fafafa; font-size: 14px; outline: none;
+  font-family: inherit; margin-bottom: 12px; text-align: center; letter-spacing: 2px;
+}
+.login-box input::placeholder { color: hsl(240, 5%, 35%); letter-spacing: 0; }
+.login-box input:focus { border-color: #4bff60; }
+.login-box button {
+  width: 100%; padding: 12px; border-radius: 10px; border: none;
+  background: #4bff60; color: #0F170B; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+}
+.login-box button:hover { background: #3de050; }
+.login-box .error { color: #FF4444; font-size: 12px; margin-top: 8px; display: none; }
+
+/* Dashboard */
+#dashboard { display: none; padding: 20px; max-width: 1100px; margin: 0 auto; }
+h1.dash-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.subtitle { font-size: 13px; color: #666; margin-bottom: 20px; }
+.stats-row { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 14px 18px; flex: 1; min-width: 100px; }
+.stat-val { font-size: 28px; font-weight: 800; color: #1a1a1a; }
+.stat-label { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+.chart-row { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.chart-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px; flex: 1; min-width: 200px; }
+.chart-card h3 { font-size: 13px; font-weight: 600; color: #666; margin-bottom: 10px; }
+.chart-container { position: relative; height: 180px; }
+.table-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px; }
+.table-card h3 { font-size: 13px; font-weight: 600; color: #666; margin-bottom: 12px; }
+.search-bar {
+  width: 100%; padding: 10px 14px; border: 1px solid #e0e0e0; border-radius: 8px;
+  font-size: 13px; outline: none; margin-bottom: 12px; font-family: inherit;
+}
+.search-bar:focus { border-color: #4bff60; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+     color: #888; font-weight: 600; padding: 8px 10px; border-bottom: 2px solid #eee; cursor: pointer; user-select: none; }
+th:hover { color: #333; }
+td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+tr:hover td { background: #fafffe; }
+.ovr-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: 12px; }
+.tier-beginner { background: #f0f0f0; color: #666; }
+.tier-developing { background: #e8f5e9; color: #2e7d32; }
+.tier-casual { background: #e3f2fd; color: #1565c0; }
+.tier-regular { background: #fff3e0; color: #e65100; }
+.tier-competitive { background: #fce4ec; color: #c62828; }
+.tier-advanced { background: #f3e5f5; color: #6a1b9a; }
+.tier-semipro { background: #fff8e1; color: #f57f17; }
+.tier-professional { background: #ffebee; color: #b71c1c; }
+.loading { text-align: center; padding: 40px; color: #888; font-size: 14px; }
+.refresh-btn { float: right; background: none; border: 1px solid #ddd; border-radius: 6px;
+  padding: 4px 12px; font-size: 12px; cursor: pointer; color: #666; font-family: inherit; }
+.refresh-btn:hover { border-color: #4bff60; color: #333; }
+</style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>KickOff Admin</h1>
+    <p class="sub">Enter the access code to view signups</p>
+    <input type="password" id="codeInput" placeholder="Access code" autofocus>
+    <button onclick="tryLogin()">View Dashboard</button>
+    <p class="error" id="loginError">Incorrect code. Try again.</p>
+  </div>
+</div>
+
+<!-- Dashboard (hidden until auth) -->
+<div id="dashboard">
+  <h1 class="dash-title">KickOff Waitlist Signups <button class="refresh-btn" onclick="loadData()">Refresh</button></h1>
+  <p class="subtitle">Everyone who completed the questionnaire</p>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="totalCount">-</div><div class="stat-label">Total Signups</div></div>
+    <div class="stat-card"><div class="stat-val" id="avgOvr">-</div><div class="stat-label">Avg OVR</div></div>
+    <div class="stat-card"><div class="stat-val" id="todayCount">-</div><div class="stat-label">Today</div></div>
+    <div class="stat-card"><div class="stat-val" id="topTier">-</div><div class="stat-label">Most Common Tier</div></div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-card">
+      <h3>Signups by Tier</h3>
+      <div class="chart-container"><canvas id="tierChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>OVR Distribution</h3>
+      <div class="chart-container"><canvas id="ovrChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <h3>All Signups</h3>
+    <input class="search-bar" type="text" id="searchInput" placeholder="Search by name, email, username..." oninput="filterTable()">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy(0)">#</th>
+          <th onclick="sortBy(1)">Name</th>
+          <th onclick="sortBy(2)">Email</th>
+          <th onclick="sortBy(3)">Username</th>
+          <th onclick="sortBy(4)">OVR</th>
+          <th onclick="sortBy(5)">Tier</th>
+          <th onclick="sortBy(6)">Experience</th>
+          <th onclick="sortBy(7)">Signed Up</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"><tr><td colspan="8" class="loading">Loading...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// Access code: kickoff2026
+const CODE_HASH = '5a7d4c8e';
+function simpleHash(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; }
+  return (h >>> 0).toString(16);
+}
+
+function tryLogin() {
+  const input = document.getElementById('codeInput').value.trim();
+  if (simpleHash(input) === CODE_HASH) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    sessionStorage.setItem('ko_auth', '1');
+    loadData();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('codeInput').value = '';
+    document.getElementById('codeInput').focus();
+  }
+}
+
+document.getElementById('codeInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') tryLogin();
+});
+
+if (sessionStorage.getItem('ko_auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  loadData();
+}
+
+const SB_URL = 'https://gasaitelsorrofjajnfj.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdhc2FpdGVsc29ycm9mamFqbmZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxODQ5MTgsImV4cCI6MjA5Mzc2MDkxOH0.j6YUdEGsqmUBvyZYEDD0pvc56nyeOUZWcR2q0yg8RUM';
+
+let allData = [];
+let sortCol = 7, sortAsc = false;
+let tierChartInstance = null, ovrChartInstance = null;
+
+async function loadData() {
+  try {
+    const r = await fetch(SB_URL + '/rest/v1/questionnaire_responses?select=name,email,preferred_username,ovr,tier,experience,level,frequency,created_at&order=created_at.desc', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    if (!r.ok) throw new Error('Status ' + r.status);
+    allData = await r.json();
+    renderStats();
+    renderCharts();
+    renderTable();
+  } catch (e) {
+    document.getElementById('tableBody').innerHTML = '<tr><td colspan="8" style="text-align:center;color:#e53e3e;padding:30px;">Error: ' + e.message + '</td></tr>';
+  }
+}
+
+function renderStats() {
+  document.getElementById('totalCount').textContent = allData.length;
+  const avg = allData.length ? Math.round(allData.reduce((s, d) => s + (d.ovr || 0), 0) / allData.length) : 0;
+  document.getElementById('avgOvr').textContent = avg;
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('todayCount').textContent = allData.filter(d => d.created_at && d.created_at.startsWith(today)).length;
+  const tc = {};
+  allData.forEach(d => { tc[d.tier] = (tc[d.tier] || 0) + 1; });
+  const top = Object.entries(tc).sort((a, b) => b[1] - a[1])[0];
+  document.getElementById('topTier').textContent = top ? top[0] : '-';
+}
+
+function renderCharts() {
+  const tc = {};
+  allData.forEach(d => { tc[d.tier] = (tc[d.tier] || 0) + 1; });
+  const tierColors = ['#90caf9', '#a5d6a7', '#ffcc80', '#ef9a9a', '#ce93d8', '#80deea', '#fff59d', '#f48fb1'];
+
+  if (tierChartInstance) tierChartInstance.destroy();
+  tierChartInstance = new Chart(document.getElementById('tierChart'), {
+    type: 'doughnut',
+    data: { labels: Object.keys(tc), datasets: [{ data: Object.values(tc), backgroundColor: tierColors, borderWidth: 0 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 12, padding: 8, font: { size: 11 } } } } }
+  });
+
+  const buckets = { '60-64': 0, '65-69': 0, '70-74': 0, '75-79': 0, '80-84': 0, '85-89': 0, '90+': 0 };
+  allData.forEach(d => {
+    const o = d.ovr || 0;
+    if (o < 65) buckets['60-64']++;
+    else if (o < 70) buckets['65-69']++;
+    else if (o < 75) buckets['70-74']++;
+    else if (o < 80) buckets['75-79']++;
+    else if (o < 85) buckets['80-84']++;
+    else if (o < 90) buckets['85-89']++;
+    else buckets['90+']++;
+  });
+
+  if (ovrChartInstance) ovrChartInstance.destroy();
+  ovrChartInstance = new Chart(document.getElementById('ovrChart'), {
+    type: 'bar',
+    data: { labels: Object.keys(buckets), datasets: [{ data: Object.values(buckets), backgroundColor: '#4ade80', borderRadius: 4, barPercentage: 0.7 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 } }, grid: { color: '#f0f0f0' } }, x: { ticks: { font: { size: 11 } }, grid: { display: false } } } }
+  });
+}
+
+function tierClass(t) {
+  const s = (t || '').toLowerCase().replace(/-/g, '');
+  if (s === 'beginner') return 'tier-beginner';
+  if (s === 'developing') return 'tier-developing';
+  if (s === 'casual') return 'tier-casual';
+  if (s === 'regular') return 'tier-regular';
+  if (s === 'competitive') return 'tier-competitive';
+  if (s === 'advanced') return 'tier-advanced';
+  if (s === 'semipro') return 'tier-semipro';
+  if (s === 'professional') return 'tier-professional';
+  return '';
+}
+
+function fmtDate(iso) {
+  const d = new Date(iso);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + ', ' +
+    d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+}
+
+function renderTable() {
+  const q = (document.getElementById('searchInput').value || '').toLowerCase();
+  let rows = allData.map((d, i) => [
+    i + 1, d.name || '', d.email || '', d.preferred_username || '', d.ovr || 0, d.tier || '', d.experience || '', d.created_at || ''
+  ]);
+
+  if (q) {
+    rows = rows.filter(r => r[1].toLowerCase().includes(q) || r[2].toLowerCase().includes(q) || r[3].toLowerCase().includes(q));
+  }
+
+  rows.sort((a, b) => {
+    let va = a[sortCol], vb = b[sortCol];
+    if (typeof va === 'number') return sortAsc ? va - vb : vb - va;
+    va = String(va).toLowerCase(); vb = String(vb).toLowerCase();
+    return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+  });
+
+  rows.forEach((r, i) => r[0] = i + 1);
+
+  const tbody = document.getElementById('tableBody');
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#888;padding:30px;">No results found</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map(r =>
+    '<tr>' +
+    '<td>' + r[0] + '</td>' +
+    '<td><strong>' + r[1] + '</strong></td>' +
+    '<td>' + r[2] + '</td>' +
+    '<td>' + (r[3] ? '@' + r[3] : '') + '</td>' +
+    '<td><span class="ovr-badge">' + r[4] + '</span></td>' +
+    '<td><span class="ovr-badge ' + tierClass(r[5]) + '">' + r[5] + '</span></td>' +
+    '<td>' + r[6] + '</td>' +
+    '<td>' + fmtDate(r[7]) + '</td>' +
+    '</tr>'
+  ).join('');
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortAsc = !sortAsc;
+  else { sortCol = col; sortAsc = true; }
+  renderTable();
+}
+
+function filterTable() { renderTable(); }
+</script>
+</body>
+</html>
