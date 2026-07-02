@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>KickOff Ã¢ÂÂ Join the Waitlist</title>
+<title>KickOff ÃÂ¢ÃÂÃÂ Join the Waitlist</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@ body { font-family: 'Inter', sans-serif; background: hsl(240, 10%, 3.9%); color:
 .logo img { width: 150px; height: auto; }
 .logo p { font-size: 11px; color: hsl(240, 5%, 64.9%); margin-top: 8px; font-weight: 400; }
 
-/* Content shell Ã¢ÂÂ matches the app's Content component */
+/* Content shell ÃÂ¢ÃÂÃÂ matches the app's Content component */
 .card {
   width: calc(100% + 28px);
   margin-left: -14px;
@@ -184,43 +184,43 @@ input, button, select, textarea { font-family: 'Inter', sans-serif; }
 
 <script>
 const q1opts = [
-  {id:"new",title:"I'm new to football",desc:"You're just getting started or you've only played a handful of times. Everyone starts somewhere Ã¢ÂÂ this is your somewhere."},
-  {id:"casual",title:"I play casually with mates",desc:"Park kickabouts, the odd 5-a-side with friends. No league, no drama Ã¢ÂÂ just a good time."},
+  {id:"new",title:"I'm new to football",desc:"You're just getting started or you've only played a handful of times. Everyone starts somewhere ÃÂ¢ÃÂÃÂ this is your somewhere."},
+  {id:"casual",title:"I play casually with mates",desc:"Park kickabouts, the odd 5-a-side with friends. No league, no drama ÃÂ¢ÃÂÃÂ just a good time."},
   {id:"cleague",title:"I play in a casual league",desc:"Work league, social 5/6/7-a-side, or a regular weekly game. You've probably got a team group chat that's 90% banter."},
   {id:"comp",title:"I play in a competitive league",desc:"Sunday league, competitive 11-a-side, or a proper league where the table actually matters to people."},
-  {id:"semipro",title:"Semi-pro or above",desc:"You've played at a level most people only watch. Academy, semi-pro, professional Ã¢ÂÂ the real deal."}
+  {id:"semipro",title:"Semi-pro or above",desc:"You've played at a level most people only watch. Academy, semi-pro, professional ÃÂ¢ÃÂÃÂ the real deal."}
 ];
 
 const branches = {
-  "new":{label:"How would you describe your ability right now?",sub:"No wrong answers here Ã¢ÂÂ this just helps us find your starting point",opts:[
-    {title:"Completely brand new",desc:"You're still getting used to how the ball moves. Passing and shooting feel unpredictable, and that's totally fine Ã¢ÂÂ you'll improve fast.",seed:950},
+  "new":{label:"How would you describe your ability right now?",sub:"No wrong answers here ÃÂ¢ÃÂÃÂ this just helps us find your starting point",opts:[
+    {title:"Completely brand new",desc:"You're still getting used to how the ball moves. Passing and shooting feel unpredictable, and that's totally fine ÃÂ¢ÃÂÃÂ you'll improve fast.",seed:950},
     {title:"Getting the hang of it",desc:"You can kick the ball and it goes roughly the right direction. Your touch isn't consistent yet but you're getting there.",seed:1025},
-    {title:"Athletic, just new to football",desc:"You're fit and active from other sports Ã¢ÂÂ football is just the latest addition. You tend to pick things up quickly.",seed:1100}
+    {title:"Athletic, just new to football",desc:"You're fit and active from other sports ÃÂ¢ÃÂÃÂ football is just the latest addition. You tend to pick things up quickly.",seed:1100}
   ]},
-  "casual":{label:"When you play with your mates, where do you fit in?",sub:"Think about a typical game Ã¢ÂÂ we all have good days and bad days",opts:[
+  "casual":{label:"When you play with your mates, where do you fit in?",sub:"Think about a typical game ÃÂ¢ÃÂÃÂ we all have good days and bad days",opts:[
     {title:"I'm still finding my feet",desc:"You love playing but fitness or confidence can be a challenge. You're there for the fun and that's what matters.",seed:1075},
     {title:"I hold my own",desc:"You can last most of the game, your passing is decent, and you feel comfortable on the pitch. A reliable pick.",seed:1150},
     {title:"I'm usually one of the better ones",desc:"You get picked early, you can control the game a bit, and you chip in with goals or assists fairly regularly.",seed:1225}
   ]},
-  "cleague":{label:"How do you compare to others in your league?",sub:"Think about a normal week Ã¢ÂÂ not your best performance, not your worst",opts:[
+  "cleague":{label:"How do you compare to others in your league?",sub:"Think about a normal week ÃÂ¢ÃÂÃÂ not your best performance, not your worst",opts:[
     {title:"I'm still developing at this level",desc:"The pace can feel a bit fast sometimes and you're still growing into the standard. Every game you're learning though.",seed:1175},
     {title:"I'm a solid mid-table player",desc:"You do your job well, you're reliable, and you can comfortably play the full game without any issues.",seed:1250},
-    {title:"I'm one of the best in my league",desc:"You're a key player for your team. People notice when you play well Ã¢ÂÂ and when you're not there.",seed:1325}
+    {title:"I'm one of the best in my league",desc:"You're a key player for your team. People notice when you play well ÃÂ¢ÃÂÃÂ and when you're not there.",seed:1325}
   ]},
   "comp":{label:"What level of competitive football?",sub:"Where you're playing regularly right now",opts:[
     {title:"Standard Sunday league",desc:"Regular 11-a-side weekend league with a proper ref, proper goals, and a league table. Good standard, proper football.",seed:1350},
     {title:"High-level amateur",desc:"Top-tier Sunday league, county cups, FA Vase qualifying rounds. A clear step up from your average local league.",seed:1450}
   ]},
-  "semipro":{label:"What level have you played at?",sub:"The highest level you competed at regularly Ã¢ÂÂ not a one-off trial or friendly",warn:true,opts:[
+  "semipro":{label:"What level have you played at?",sub:"The highest level you competed at regularly ÃÂ¢ÃÂÃÂ not a one-off trial or friendly",warn:true,opts:[
     {title:"County or regional level",desc:"County cups, regional leagues, strong university 1st team, or serious representative football. A level above club football.",seed:1450},
     {title:"Academy or semi-pro",desc:"Professional club academy, National League System (step 5-7), or you were paid to play part-time. Proper pedigree.",seed:1650},
-    {title:"Professional",desc:"Full-time professional contract Ã¢ÂÂ EFL, Scottish Premiership, or equivalent abroad. You had a squad number and a locker.",seed:1900},
+    {title:"Professional",desc:"Full-time professional contract ÃÂ¢ÃÂÃÂ EFL, Scottish Premiership, or equivalent abroad. You had a squad number and a locker.",seed:1900},
     {title:"Top-flight or international",desc:"Premier League, Championship, top European leagues, or senior international caps. You already know where you belong.",seed:2150}
   ]}
 };
 
 const q2opts = [
-  {title:"Rarely",desc:"A few times a year at most. Your boots might need dusting off but that's alright Ã¢ÂÂ they'll warm up.",adj:-50},
+  {title:"Rarely",desc:"A few times a year at most. Your boots might need dusting off but that's alright ÃÂ¢ÃÂÃÂ they'll warm up.",adj:-50},
   {title:"Once or twice a month",desc:"You play when life allows it. Not every week, but enough to keep the rust off.",adj:0},
   {title:"About once a week",desc:"You've got a regular weekly game or session. Football is a proper part of your week.",adj:25},
   {title:"Multiple times a week",desc:"Training, matches, or kickabouts 2+ times a week. Football is a big part of your routine and you love it.",adj:50}
@@ -297,7 +297,7 @@ function render(){
     h+='<div class="waitlist-emoji">&#127941;</div>';
     h+='<p class="waitlist-title">Welcome to the waitlist!</p>';
     h+='<p class="waitlist-ovr">Your starting OVR: '+submittedOvr+'</p>';
-    h+='<p class="waitlist-msg">You\'re on the list, '+playerFirstName+'. When KickOff launches, we\'ll send you an email so you can download the app. Your starting rating of <strong>'+submittedOvr+'</strong> will be waiting for you Ã¢ÂÂ ready to go from your very first match.</p>';
+    h+='<p class="waitlist-msg">You\'re on the list, '+playerFirstName+'. When KickOff launches, we\'ll send you an email so you can download the app. Your starting rating of <strong>'+submittedOvr+'</strong> will be waiting for you ÃÂ¢ÃÂÃÂ ready to go from your very first match.</p>';
     if(playerUsername){
       h+='<p class="waitlist-username">Your username: <strong>@'+playerUsername+'</strong></p>';
     }
@@ -310,7 +310,7 @@ function render(){
     h+=dots(1,5);
     h+='<p class="q-label">Let\'s get you set up</p>';
     h+='<p class="q-sub">We\'ll use this to create your account when the app launches</p>';
-    h+='<div class="once-notice"><p>You can only do this once Ã¢ÂÂ go with your gut on the questions. Your real matches will adjust your rating quickly anyway.</p></div>';
+    h+='<div class="once-notice"><p>You can only do this once ÃÂ¢ÃÂÃÂ go with your gut on the questions. Your real matches will adjust your rating quickly anyway.</p></div>';
 
     h+='<label class="field-label">First name <span style="color:#FF4444;">*</span></label>';
     h+='<input class="field-input" type="text" placeholder="e.g. John" id="firstNameInput" value="'+playerFirstName+'" autocomplete="given-name" autocapitalize="words">';
@@ -331,7 +331,7 @@ function render(){
   else if(step==="q1"){
     h+=dots(2,5);
     h+='<p class="q-label">What best describes your football experience?</p>';
-    h+='<p class="q-sub">Pick the one that fits you right now Ã¢ÂÂ not where you used to be</p>';
+    h+='<p class="q-sub">Pick the one that fits you right now ÃÂ¢ÃÂÃÂ not where you used to be</p>';
     h+=optHTML(q1opts,q1sel,"pickQ1");
     h+='<button class="btn btn-primary"'+(q1sel<0?' disabled':'')+' onclick="goToBranch()">Next</button>';
     h+='<button class="btn btn-back" onclick="goBack(\'name\')">Back</button>';
@@ -342,7 +342,7 @@ function render(){
     h+='<p class="q-label">'+br.label+'</p>';
     h+='<p class="q-sub">'+br.sub+'</p>';
     if(br.warn){
-      h+='<div class="hint"><span class="hint-icon">&#9432;</span><p>Just a heads up Ã¢ÂÂ your rating updates after every match based on how you actually play. There\'s no benefit to picking a level higher than where you really are. Be honest and the system will do the rest.</p></div>';
+      h+='<div class="hint"><span class="hint-icon">&#9432;</span><p>Just a heads up ÃÂ¢ÃÂÃÂ your rating updates after every match based on how you actually play. There\'s no benefit to picking a level higher than where you really are. Be honest and the system will do the rest.</p></div>';
     }
     h+=optHTML(br.opts,brSel,"pickBr");
     h+='<button class="btn btn-primary"'+(brSel<0?' disabled':'')+' onclick="goToQ2()">Next</button>';
@@ -351,7 +351,7 @@ function render(){
   else if(step==="q2"){
     h+=dots(4,5);
     h+='<p class="q-label">How often do you play?</p>';
-    h+='<p class="q-sub">Include everything Ã¢ÂÂ matches, training, park kickabouts, all of it</p>';
+    h+='<p class="q-sub">Include everything ÃÂ¢ÃÂÃÂ matches, training, park kickabouts, all of it</p>';
     h+=optHTML(q2opts,q2sel,"pickQ2");
     h+='<button class="btn btn-primary"'+(q2sel<0?' disabled':'')+' onclick="goToResult()">See my starting rating</button>';
     h+='<button class="btn btn-back" onclick="goBack(\'branch\')">Back</button>';
@@ -449,7 +449,7 @@ function goToQ1(){
     return;
   }
   if(!isValidUsername(playerUsername)){
-    errEl.textContent="Username must be 3Ã¢ÂÂ20 characters: lowercase letters, numbers, or underscores";
+    errEl.textContent="Username must be 3ÃÂ¢ÃÂÃÂ20 characters: lowercase letters, numbers, or underscores";
     errEl.style.display="block";
     document.getElementById("usernameInput").classList.add("error");
     return;
@@ -484,13 +484,13 @@ function checkUsername(u){
   usernameAvailable=null;
   inp.classList.remove("valid-username","taken-username");
   if(!u||u.length<3){
-    statusEl.textContent=u?"3Ã¢ÂÂ20 chars: lowercase letters, numbers, underscores":"";
+    statusEl.textContent=u?"3ÃÂ¢ÃÂÃÂ20 chars: lowercase letters, numbers, underscores":"";
     statusEl.className="username-status";
     updateNameBtn();
     return;
   }
   if(!/^[a-z0-9_]{3,20}$/.test(u)){
-    statusEl.textContent="Only lowercase letters, numbers, and underscores (3Ã¢ÂÂ20 chars)";
+    statusEl.textContent="Only lowercase letters, numbers, and underscores (3ÃÂ¢ÃÂÃÂ20 chars)";
     statusEl.className="username-status taken";
     updateNameBtn();
     return;
@@ -596,7 +596,7 @@ function submitResult(){
     if(e.message==="duplicate"){
       errEl.textContent="This email is already on the waitlist!";
     } else {
-      errEl.textContent="Something went wrong Ã¢ÂÂ try again";
+      errEl.textContent="Something went wrong ÃÂ¢ÃÂÃÂ try again";
     }
     errEl.style.display="block";
   });
