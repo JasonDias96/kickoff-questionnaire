@@ -227,6 +227,9 @@ const q2opts = [
 ];
 
 let step="name",playerFirstName="",playerLastName="",playerEmail="",playerUsername="",q1sel=-1,brSel=-1,q2sel=-1,submitted=false,submittedOvr=0;
+var usernameCheckTimer=null;
+var emailCheckTimer=null;
+
 function getPlayerName(){return (playerFirstName.trim()+(playerLastName.trim()?" "+playerLastName.trim():""));}
 
 function toOVR(v){return Math.max(60,Math.min(99,Math.round(60+(v-800)*39.0/1400.0)))}
