@@ -451,16 +451,17 @@ function render(){
     const btn=document.getElementById("nameBtn");
     const errEl=document.getElementById("nameError");
 
-    function syncValues(){
-      playerFirstName=firstNameInp.value;
-      playerLastName=lastNameInp.value;
+    function syncValues(e){
+      playerName=nameInp.value;
+      const oldEmail=playerEmail;
       playerEmail=emailInp.value;
-      const prev=playerUsername;
+      const oldUsername=playerUsername;
       playerUsername=usernameInp.value.toLowerCase().replace(/[^a-z0-9_]/g,"");
       usernameInp.value=playerUsername;
+      if(playerUsername!==oldUsername)checkUsernameAvailability(playerUsername);
+      if(playerEmail!==oldEmail)checkEmailAvailability(playerEmail);
+      updateBtn();
       errEl.style.display="none";
-      if(playerUsername!==prev){usernameAvailable=null;checkUsername(playerUsername);}
-      updateNameBtn();
     }
 
     if(firstNameInp){
