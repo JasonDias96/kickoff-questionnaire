@@ -194,7 +194,7 @@ const branches = {
     {title:"I hold my own",desc:"You can last most of the game, your passing is decent, and you feel comfortable on the pitch. A reliable pick.",seed:1150},
     {title:"I'm usually one of the better ones",desc:"You get picked early, you can control the game a bit, and you chip in with goals or assists fairly regularly.",seed:1225}
   ]},
-  "cleague":{label:"How do you compare to others in your league?",sub:"Think about a normal week — not your best performance, not your worst",opts:[
+  "cleague":{label:"How do you compare to others in your league?",sub:"Think about a normal week — wot your best performance, not your worst",opts:[
     {title:"I'm still developing at this level",desc:"The pace can feel a bit fast sometimes and you're still growing into the standard. Every game you're learning though.",seed:1175},
     {title:"I'm a solid mid-table player",desc:"You do your job well, you're reliable, and you can comfortably play the full game without any issues.",seed:1250},
     {title:"I'm one of the best in my league",desc:"You're a key player for your team. People notice when you play well — and when you're not there.",seed:1325}
@@ -440,6 +440,7 @@ function render(){
 
     h+='<button class="btn btn-submit" id="submitBtn" onclick="submitResult()">Join the waitlist</button>';
     h+='<p id="submitError" style="font-size:12px;color:#FF4444;text-align:center;margin-top:8px;display:none;"></p>';
+    h+='<p style="font-size:10px;color:hsl(240,5%,50%);text-align:center;margin-top:12px;line-height:1.5;">By joining, you agree to share your name, email and username with KickOff. We\'ll only ever email you about the app launch — no spam, no junk, no constant emails. We won\'t share your info with anyone.</p>';
 
     h+='<div class="done-msg">';
     h+='<p>We\'ll email you when KickOff launches</p>';
