@@ -256,6 +256,44 @@ function checkUsernameAvailability(username){
       });
   },500);
 }
+function checkEmailAvailability(email){
+  if(emailCheckTimer)clearTimeout(emailCheckTimer);
+  if(!email||!isValidEmail(email)){emailStatus="idle";updateEmailHint();return;}
+  emailStatus="checking";updateEmailHint();
+  emailCheckTimer=setTimeout(()=>{
+    fetch(API_BASE+"/player/check-email-public/"+encodeURIComponent(email))
+      .then(r=>r.json())
+      .then(data=>{
+        if(playerEmail!==email)return;
+        emailStatus=data.exists?"taken":"available";
+        updateEmailHint();updateBtn();
+      })
+      .catch(()=>{
+        if(playerEmail!==email)return;
+        emailStatus="idle";updateEmailHint();updateBtn();
+      });
+  },500);
+}
+
+function updateEmailHint(){
+  const el=document.getElementById("emailHint");
+  const inp=document.getElementById("emailInput");
+  if(!el)return;
+  if(emailStatus==="checking"){
+    el.textContent="Checking...";el.style.color="#888";
+    if(inp)inp.style.borderColor="#416244";
+  }else if(emailStatus==="available"){
+    el.textContent="We'll notify you when the app is ready to download";el.style.color="#888";
+    if(inp)inp.style.borderColor="#416244";
+  }else if(emailStatus==="taken"){
+    el.textContent="An account already exists with this email";el.style.color="#FF4444";
+    if(inp)inp.style.borderColor="#FF4444";
+  }else{
+    el.textContent="We'll notify you when the app is ready to download";el.style.color="#888";
+    if(inp)inp.style.borderColor="#416244";
+  }
+}
+
 function updateUsernameHint(){
   var el=document.getElementById("usernameHint");
   var inp=document.getElementById("usernameInput");
@@ -268,7 +306,7 @@ function updateUsernameHint(){
 }
 function updateBtn(){
   var btn=document.getElementById("nameBtn");
-  if(btn)btn.disabled=!(playerName.trim()&&playerEmail.trim()&&playerUsername.trim()&&usernameStatus==="available");
+  if(btn)btn.disabled=!(playerName.trim()&&playerEmail.trim()&&playerUsername.trim()&&usernameStatus==="available"&&emailStatus!=="taken");
 }
 
 function dots(a,t){
@@ -444,6 +482,12 @@ function goToQ1(){
   const errEl=document.getElementById("nameError");
   if(!isValidEmail(playerEmail)){
     errEl.textContent="Please enter a valid email address";
+    errEl.style.display="block";
+    document.getElementById("emailInput").classList.add("error");
+    return;
+  }
+  if(emailStatus==="taken"){
+    errEl.textContent="An account already exists with this email";
     errEl.style.display="block";
     document.getElementById("emailInput").classList.add("error");
     return;
